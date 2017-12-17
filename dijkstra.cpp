@@ -101,12 +101,12 @@ void quickSort(int (&arr)[4][2], int low, int high)
   
 // A utility function to find the vertex with minimum distance value, from
 // the set of vertices not yet included in shortest path tree
-int minDistance(int dist[], bool sptSet[])
+int minDistance(int dist[], bool sptSet[], int num_cities)
 {
    // Initialize min value
    int min = INT_MAX, min_index;
   
-   for (int v = 0; v < V; v++)
+   for (int v = 0; v < num_cities; v++)
      if (sptSet[v] == false && dist[v] <= min)
          min = dist[v], min_index = v;
   
@@ -114,13 +114,13 @@ int minDistance(int dist[], bool sptSet[])
 }
   
 // A utility function to print the constructed distance array
-int printSolution(int dist[], int n, int dest)
+int printSolution(int dist[], int num_cities)
 {
    printf("Vertex   Distance from Source\n");
-   for (int i = 0; i < V; i++)
+   for (int i = 0; i < num_cities; i++)
       printf("%d \t", i);
    printf("\n");
-   for (int i = 0; i < V; i++)
+   for (int i = 0; i < num_cities; i++)
       printf("%d \t", dist[i]);
    printf("\n");
 
@@ -128,33 +128,33 @@ int printSolution(int dist[], int n, int dest)
   
 // Funtion that implements Dijkstra's single source shortest path algorithm
 // for a graph represented using adjacency matrix representation
-void dijkstra(int graph[V][V], int dist[V], int src, int dest)
+void dijkstra(int** graph, int dist[], int src, int num_cities)
 {
      //int dist[V];     // The output array.  dist[i] will hold the shortest
                       // distance from src to i
   
-     bool sptSet[V]; // sptSet[i] will true if vertex i is included in shortest
+     bool sptSet[num_cities]; // sptSet[i] will true if vertex i is included in shortest
                      // path tree or shortest distance from src to i is finalized
   
      // Initialize all distances as INFINITE and stpSet[] as false
-     for (int i = 0; i < V; i++)
+     for (int i = 0; i < num_cities; i++)
         dist[i] = INT_MAX, sptSet[i] = false;
   
      // Distance of source vertex from itself is always 0
      dist[src] = 0;
   
      // Find shortest path for all vertices
-     for (int count = 0; count < V-1; count++)
+     for (int count = 0; count < num_cities-1; count++)
      {
        // Pick the minimum distance vertex from the set of vertices not
        // yet processed. u is always equal to src in first iteration.
-       int u = minDistance(dist, sptSet);
+       int u = minDistance(dist, sptSet, num_cities);
   
        // Mark the picked vertex as processed
        sptSet[u] = true;
   
        // Update dist value of the adjacent vertices of the picked vertex.
-       for (int v = 0; v < V; v++)
+       for (int v = 0; v < num_cities; v++)
   
          // Update dist[v] only if is not in sptSet, there is an edge from 
          // u to v, and total weight of path from src to  v through u is 
@@ -165,11 +165,11 @@ void dijkstra(int graph[V][V], int dist[V], int src, int dest)
      }
   
      // print the constructed distance array
-     printSolution(dist, V, dest);
+     printSolution(dist, num_cities );
 }
   
 // driver program to test above function
-int main(char *argv[])
+int main()
 {
    /* Let us create the example graph discussed above */
     /*
@@ -207,11 +207,20 @@ whose choice will make the biggest minimization in total distance
 
   input >> num_cities;
 
-  int myGraph[V][V];
+  //int myGraph[num_cities][num_cities];
+
+  int** myGraph;
+  myGraph = new int*[num_cities];
+  for (int i = 0; i < num_cities; ++i)
+  {
+    myGraph[i] = new int[num_cities];
+  }
+
 
   input >> num_dest;
 
-  int destArr[num_dest];
+  int* destArr;
+  destArr = new int[num_dest];
 
   int count = 3;
   int graph_index_1 = 0;
@@ -230,7 +239,7 @@ whose choice will make the biggest minimization in total distance
     }
     else if (count <= num_dest+4)
     {
-      destArr[count-4] = a;
+      destArr[count-5] = a;
       count++;
     } else if (count > num_dest+4)
     {
@@ -249,7 +258,7 @@ whose choice will make the biggest minimization in total distance
   }
 
 
-
+/*
    int graph[V][V] = {{0, 43, 0, 46, 15, 0, 0, 0, 0, 0},
                       {43, 0, 0, 50, 0, 36, 43, 0, 0, 0},
                       {0, 0, 0, 0, 0, 0, 0, 49, 13, 0},
@@ -261,6 +270,8 @@ whose choice will make the biggest minimization in total distance
                       {0, 0, 13, 0, 46, 0, 0, 0, 0, 0},
                       {0, 0, 0, 0, 45, 0, 0, 0, 0, 0},
                      };
+
+                     */
     int dist1[V]; 
     int dist2[V]; 
     int diff[4][2];
@@ -276,20 +287,35 @@ whose choice will make the biggest minimization in total distance
 
     //----TEST----------
 
-    dijkstra(myGraph, dist1, wh1, 1);
-    dijkstra(myGraph, dist2, wh2, 1);
+    //int graphPtr[num_cities][num_cities] ;
+    //graphPtr = myGraph;
+
+    printf("num_cities :  %d \n", num_cities );
+
+
+    dijkstra(myGraph, dist1, wh1, num_cities);
+    dijkstra(myGraph, dist2, wh2, num_cities);
 
 
 
 
     //----TEST----------
 
+    printf("num_cities :  %d \n", num_cities );
+
+    for (int i = 0; i < num_dest; ++i)
+    {
+      printf(" ---^^^>>> %d \n", destArr[i] );
+    }
+
+
+
 
     printf("DIFF:\n");
     for (int i = 0; i < 4; ++i)
     {
-      diff[i][0] = dist1[destArray[i]] - dist2[destArray[i]];
-      diff[i][1] = destArray[i];
+      diff[i][0] = dist1[destArr[i]] - dist2[destArr[i]];
+      diff[i][1] = destArr[i];
     }
       quickSort(diff,0,3);
       
