@@ -207,13 +207,15 @@ whose choice will make the biggest minimization in total distance
 
   input >> num_cities;
 
-  int myGraph[num_cities][num_cities];
+  int myGraph[V][V];
 
   input >> num_dest;
 
   int destArr[num_dest];
 
-  int count =3;
+  int count = 3;
+  int graph_index_1 = 0;
+  int graph_index_2 = 0;
 
   while(input >> a){
     if (count == 3 )
@@ -232,11 +234,20 @@ whose choice will make the biggest minimization in total distance
       count++;
     } else if (count > num_dest+4)
     {
-      //myGraph[][]
+      myGraph[graph_index_1][graph_index_2] = a;
+      printf(" TEST: %d \n", myGraph[graph_index_1][graph_index_2] );
+
+      graph_index_2++;
+      if (graph_index_2 == num_cities)
+      {
+        graph_index_1++;
+        graph_index_2 = 0;
+      }
     }
 
-    printf("%d \n", a);
+    //printf("%d \n", a);
   }
+
 
 
    int graph[V][V] = {{0, 43, 0, 46, 15, 0, 0, 0, 0, 0},
@@ -259,8 +270,21 @@ whose choice will make the biggest minimization in total distance
     int w1 = 5;
     int w2 = 7;
 
-    dijkstra(graph, dist1, w1, 1);
-    dijkstra(graph, dist2, w2, 1);
+    //dijkstra(graph, dist1, w1, 1);
+    //dijkstra(graph, dist2, w2, 1);
+
+
+    //----TEST----------
+
+    dijkstra(myGraph, dist1, wh1, 1);
+    dijkstra(myGraph, dist2, wh2, 1);
+
+
+
+
+    //----TEST----------
+
+
     printf("DIFF:\n");
     for (int i = 0; i < 4; ++i)
     {
