@@ -6,6 +6,10 @@
 #include <algorithm>
 /* C implementation QuickSort */
 #include<stdio.h>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
  
 // A utility function to swap two elements
 
@@ -186,6 +190,55 @@ whose choice will make the biggest minimization in total distance
 
 ----------------------
 */
+
+
+  ifstream input("input.txt");
+  //std::fstream input("input.txt", std::ios_base::in);
+
+  int a;
+
+  int num_cities;
+  int num_dest;
+  int wh1;
+  int wh2; // warehouses
+  
+
+  
+
+  input >> num_cities;
+
+  int myGraph[num_cities][num_cities];
+
+  input >> num_dest;
+
+  int destArr[num_dest];
+
+  int count =3;
+
+  while(input >> a){
+    if (count == 3 )
+    {
+      wh1 = a;
+      count++;
+    }
+    else if (count == 4 )
+    {
+      wh2 = a;
+      count++;
+    }
+    else if (count <= num_dest+4)
+    {
+      destArr[count-4] = a;
+      count++;
+    } else if (count > num_dest+4)
+    {
+      //myGraph[][]
+    }
+
+    printf("%d \n", a);
+  }
+
+
    int graph[V][V] = {{0, 43, 0, 46, 15, 0, 0, 0, 0, 0},
                       {43, 0, 0, 50, 0, 36, 43, 0, 0, 0},
                       {0, 0, 0, 0, 0, 0, 0, 49, 13, 0},
