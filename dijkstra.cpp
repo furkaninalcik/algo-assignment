@@ -42,14 +42,14 @@ void swap(int (&a)[2], int (&b)[2])
     array, and places all smaller (smaller than pivot)
    to left of pivot and all greater elements to right
    of pivot */
-int partition (int (&arr)[4][2], int low, int high)
+int partition (int** (arr), int low, int high)
 {
     int* pivot = arr[high];    // pivot
     printf("pivot: %d %d %d \n", high , arr[high][0], arr[high][1] );
     
     int i = (low - 1);  // Index of smaller element
  
-    printf("i: %d %d %d \n", i , arr[i][0], arr[i][1] );
+    //printf("i: %d %d %d \n", i , arr[i][0], arr[i][1] );
 
     for (int j = low; j <= high- 1; j++)
     {
@@ -75,7 +75,7 @@ int partition (int (&arr)[4][2], int low, int high)
  arr[] --> Array to be sorted,
   low  --> Starting index,
   high  --> Ending index */
-void quickSort(int (&arr)[4][2], int low, int high)
+void quickSort(int** (arr), int low, int high)
 {
     if (low < high)
     {
@@ -272,9 +272,20 @@ whose choice will make the biggest minimization in total distance
                      };
 
                      */
-    int dist1[V]; 
-    int dist2[V]; 
-    int diff[4][2];
+    
+
+    int** diff;
+    diff = new int*[num_dest];
+    for (int i = 0; i < num_dest; ++i)
+    {
+      diff[i] = new int[2];
+    }
+
+    int* dist1;
+    dist1 = new int[num_cities];
+    int* dist2;
+    dist2 = new int[num_cities];
+
 
     int destArray[4] = {1,4,6,8};
 
@@ -312,14 +323,14 @@ whose choice will make the biggest minimization in total distance
 
 
     printf("DIFF:\n");
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < num_dest; ++i)
     {
       diff[i][0] = dist1[destArr[i]] - dist2[destArr[i]];
       diff[i][1] = destArr[i];
     }
-      quickSort(diff,0,3);
+      quickSort(diff,0,num_dest-1);
       
-      for (int i = 0; i < 4; ++i)
+      for (int i = 0; i < num_dest; ++i)
       {
         printf("%d \t ", *((diff[i])) );
       }
@@ -327,24 +338,27 @@ whose choice will make the biggest minimization in total distance
 
 
     printf("*****************\n");
-    int temp[4][2] = {{-41,1},{23,4},{77,6},{11,8}};
- 
-    quickSort(temp,0,3);
-    for (int i = 0; i < 4; ++i)
-      {
-        printf("%d %d \t ", *((temp[i])) , *((temp[i])+1)  );
-      }
+    
 
     printf("Warehouse - Destination ASSIGMENTS:\n");
-    int middle = 2; // to devide the destinations equally for two warehouses 4/2 = 2
+    int middle = num_dest/2; // to devide the destinations equally for two warehouses 4/2 = 2
     int w1_counter = 0;
     int w2_counter = 0;
     bool all_to_w1 = false;
     bool all_to_w2 = false;
 
-    int result[4][2] {{-41,1},{23,4},{77,6},{11,8}};;
+    //int result[4][2] {{-41,1},{23,4},{77,6},{11,8}};;
 
-    for (int i = 3; i >= 0; --i)
+    int** result;
+    result = new int*[num_dest];
+    for (int i = 0; i < num_dest; ++i)
+    {
+      result[i] = new int[2];
+    }
+
+
+
+    for (int i = num_dest-1; i >= 0; --i)
       {
         if (w1_counter == middle)
         {
@@ -358,16 +372,16 @@ whose choice will make the biggest minimization in total distance
         
         if ( all_to_w1 || (*diff[i] < 0 && !all_to_w2))
         {
-          printf("%d %d\n", *(diff[i]+1) ,  w1);
+          printf("%d %d\n", *(diff[i]+1) ,  wh1);
           result[i][0] = *(diff[i]+1);
-          result[i][1] = w1;
+          result[i][1] = wh1;
           if(!all_to_w1)
             w1_counter++;
         }
         if(all_to_w2 || (*diff[i] > 0 &&  !all_to_w1)){
-          printf("%d %d\n", *(diff[i]+1) , w2);
+          printf("%d %d\n", *(diff[i]+1) , wh2);
           result[i][0] = *(diff[i]+1);
-          result[i][1] = w2;
+          result[i][1] = wh2;
           if(!all_to_w2)
             w2_counter++;
 
@@ -377,14 +391,14 @@ whose choice will make the biggest minimization in total distance
     int total = 0;
 
 
-    quickSort(result,0,3);
-       for (int i = 0; i < 4; ++i)
+    quickSort(result,0,num_dest-1);
+       for (int i = 0; i < num_dest; ++i)
       {
-        if (*((result[i])+1) == w1)
+        if (*((result[i])+1) == wh1)
         {
           total += dist1[*(result[i])];
         }
-        if (*((result[i])+1) == w2)
+        if (*((result[i])+1) == wh2)
         {
           total += dist2[*(result[i])];
         }
