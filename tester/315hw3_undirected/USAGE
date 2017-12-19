@@ -1,0 +1,8 @@
+Run grader.py as " python3 grader.py YOUR_EXECUTABLE_NAME ", with python3 obviously
+
+Test might not be rational such as:
+- There might be unconnected vertexes, 
+- Warehouses might also be a destination cities, 
+- Destination cities might occure in the list more than once etc.
+
+I'm not trusting my outputs 100 percent, so let me know if you take 100 or curious about expected outputs correctness
