@@ -308,7 +308,7 @@ whose choice will make the biggest minimization in total distance
  
     duration1 = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
-    std::cout<<"Time to read the input: "<< duration1 <<'\n'; 
+    //std::cout<<"Time to read the input: "<< duration1 <<'\n'; 
 
 
 
@@ -316,7 +316,7 @@ whose choice will make the biggest minimization in total distance
     diff = new int*[num_dest];
     for (int i = 0; i < num_dest; ++i)
     {
-      diff[i] = new int[2];
+      diff[i] = new int[3];
     }
 
     vector<int> dist1(num_cities, INF);
@@ -332,18 +332,24 @@ whose choice will make the biggest minimization in total distance
     //----TEST----------
 
    
-    duration2 = ( std::clock() - duration1 ) / (double) CLOCKS_PER_SEC;
+    duration2 = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
-    std::cout<<"Time to find the shortest paths: "<< duration2 <<'\n'; 
+    //std::cout<<"Time to find the shortest paths: "<< duration2 <<'\n'; 
     
+
+    
+
 
     for (int i = 0; i < num_dest; ++i)
     {
       diff[i][0] = dist1[destArr[i]] - dist2[destArr[i]];
       diff[i][1] = destArr[i];
+      diff[i][2] = i;
     }
-      quickSort(diff,0,num_dest-1);
+     quickSort(diff,0,num_dest-1);
       
+
+
 
     int middle = num_dest/2; // to devide the destinations equally for two warehouses num_dest/2
     int w1_counter = 0;
@@ -361,6 +367,9 @@ whose choice will make the biggest minimization in total distance
 
     int total = 0;
 
+
+
+
     for (int i = num_dest-1; i >= 0; --i)
       {
         if (w1_counter == middle)
@@ -376,18 +385,18 @@ whose choice will make the biggest minimization in total distance
         if ( all_to_w1 || (diff[i][0] <= 0 && !all_to_w2))
         {
           //printf("%d %d\n", *(diff[i]+1) ,  wh1);
-          result[i][0] = diff[i][1];
-          result[i][1] = wh1;
-          total += dist1[result[i][0]];
-         
+          result[diff[i][2]][0] = diff[i][1];
+          result[diff[i][2]][1] = wh1;
+          total += dist1[result[diff[i][2]][0]];
+
           if(!all_to_w1)
             w1_counter++;
         }
         if(all_to_w2 || (diff[i][0] > 0 &&  !all_to_w1)){
           //printf("%d %d\n", *(diff[i]+1) , wh2);
-          result[i][0] = (diff[i][1]);
-          result[i][1] = wh2;
-          total += dist2[result[i][0]];
+          result[diff[i][2]][0] = (diff[i][1]);
+          result[diff[i][2]][1] = wh2;
+          total += dist2[result[diff[i][2]][0]];
 
           if(!all_to_w2)
             w2_counter++;
@@ -405,27 +414,21 @@ whose choice will make the biggest minimization in total distance
     //myfile << "TOTAL: " << total <<  "\n";
 
 
-    quickSort(result,0,num_dest-1);
+    //quickSort(result,0,num_dest-1);
+
        for (int i = 0; i < num_dest; ++i)
       {
-        if ((result[i][1]) == wh1)
-        {
-          total += dist1[result[i][0]];
-        }
-        if ((result[i][1]) == wh2)
-        {
-          total += dist2[result[i][0]];
-        }
+
         printf("%d %d \n", (result[i][0]) , (result[i][1])  );
         //myfile << *((result[i])) << " " << *((result[i])+1)  << "\n";
       }
 
     //myfile.close();
 
-    duration3 = ( std::clock() - duration2 ) / (double) CLOCKS_PER_SEC;
+   
+   duration3 = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
-    std::cout<<"Time to prepare arrays and print: "<< duration3 <<'\n';
-
+    //std::cout<<"Time to prepare arrays and print: "<< duration3 <<'\n';
 
     return 0;
 }
