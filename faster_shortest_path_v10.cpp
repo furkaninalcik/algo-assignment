@@ -6,73 +6,73 @@
 #include <iostream>
 #include<bits/stdc++.h>
 
-# define INF 0x3f3f3f3f
+# define BIGnumber 0x33333333 // representing the infinity
 using namespace std;
  
-typedef pair<int, int> iPair;
+typedef pair<int, int> intPair; // integer pair
  
 
 class Graph
 {
 public:
-    int V;    
+    int num_of_vertices;    
  
-    list< pair<int, int> > *adj;
+    list< pair<int, int> > *adjList;
  
 
-    Graph(int V);  
+    Graph(int num_of_vertices);  
  
-    void addEdge(int u, int v, int w);
+    void createEdge(int u, int v, int w);
  
-    void shortestPath(int s , vector<int>& dist);
+    void findShortestPaths(int s , vector<int>& distVector);
 };
  
-Graph::Graph(int V)
+Graph::Graph(int num_of_vertices)
 {
-    this->V = V;
-    adj = new list<iPair> [V];
+    this->num_of_vertices = num_of_vertices;
+    adjList = new list<intPair> [num_of_vertices];
 }
  
-void Graph::addEdge(int u, int v, int w)
+void Graph::createEdge(int u, int v, int w)
 {
-    adj[u].push_back(make_pair(v, w));
-    adj[v].push_back(make_pair(u, w));
+    adjList[u].push_back(make_pair(v, w));
+    adjList[v].push_back(make_pair(u, w));
 }
  
-void Graph::shortestPath(int src, vector<int>& dist )
+void Graph::findShortestPaths(int source, vector<int>& distVector )
 {
 
-    set< pair<int, int> > setds;
+    set< pair<int, int> > dijkSet;
  
 
 
-    setds.insert(make_pair(0, src));
+    dijkSet.insert(make_pair(0, source));
 
-    dist[src] = 0;
+    distVector[source] = 0;
  
 
-    while (!setds.empty())
+    while (!dijkSet.empty())
     {
 
-        pair<int, int> tmp = *(setds.begin());
-        setds.erase(setds.begin());
+        pair<int, int> temp = *(dijkSet.begin());
+        dijkSet.erase(dijkSet.begin());
 
-        int u = tmp.second;
+        int u = temp.second;
  
         list< pair<int, int> >::iterator i;
-        for (i = adj[u].begin(); i != adj[u].end(); ++i)
+        for (i = adjList[u].begin(); i != adjList[u].end(); ++i)
         {
             int v = (*i).first;
-            int weight = (*i).second;
+            int w = (*i).second;
  
-            if (dist[v] > dist[u] + weight)
+            if (distVector[v] > distVector[u] + w)
             {
-                if (dist[v] != INF)
-                    setds.erase(setds.find(make_pair(dist[v], v)));
+                if (distVector[v] != BIGnumber)
+                    dijkSet.erase(dijkSet.find(make_pair(distVector[v], v)));
 
-                dist[v] = dist[u] + weight;
+                distVector[v] = distVector[u] + w;
 
-                setds.insert(make_pair(dist[v], v));
+                dijkSet.insert(make_pair(distVector[v], v));
                 
             }
         }
@@ -93,48 +93,44 @@ void swap(int (&a)[2], int (&b)[2])
     int t[2] = {a[0],a[1]};
     a[0] = b[0];
     a[1] = b[1];
-    //*(a+1) = *(b+1);
     b[0] = t[0];
     b[1] = t[1];
-    
-    //b = t;
-    //*(b+1) = *(t+1);
     
 }
  
 
-int partition (int** (arr), int low, int high)
+int part (int** (arr), int l, int h)
 {
-    int* pivot = arr[high];   
+    int* p = arr[h];   
     
-    int i = (low - 1);  
+    int i = (l - 1);  
  
 
-    for (int j = low; j <= high- 1; j++)
+    for (int j = l; j <= h- 1; j++)
     {
 
-        if (makePositive(arr[j][0]) <= makePositive(pivot[0]))
+        if (makePositive(arr[j][0]) <= makePositive(p[0]))
         {
             i++;    
             swap(arr[i], arr[j]);
             
         }
     }
-    swap(arr[i + 1], arr[high]);
+    swap(arr[i + 1], arr[h]);
     return (i + 1);
 }
  
 
-void quickSort(int** (arr), int low, int high)
+void quickS(int** (arr), int l, int h)
 {
-    if (low < high)
+    if (l < h)
     {
 
-        int pi = partition(arr, low, high);
+        int p_1 = part(arr, l, h);
  
 
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+        quickS(arr, l, p_1 - 1);
+        quickS(arr, p_1 + 1, h);
     }
 }
 
@@ -158,9 +154,6 @@ whose choice will make the biggest minimization in total distance
 ----------------------
 */
 
-
-
-  
   //printf("%s\n", argv[1] );
 
   //***********TIME**********
@@ -190,12 +183,6 @@ whose choice will make the biggest minimization in total distance
   Graph g(num_cities);
 
 
-  int** myGraph;
-  myGraph = new int*[num_cities];
-  for (int i = 0; i < num_cities; ++i)
-  {
-    myGraph[i] = new int[num_cities];
-  }
 
 
   input >> num_dest;
@@ -224,9 +211,8 @@ whose choice will make the biggest minimization in total distance
       count++;
     } else if (count > num_dest+4)
     {
-      //myGraph[graph_index_1][graph_index_2] = a;
       if(a)
-        g.addEdge(graph_index_1, graph_index_2, a );
+        g.createEdge(graph_index_1, graph_index_2, a );
 
       graph_index_2++;
       if (graph_index_2 == num_cities)
@@ -253,12 +239,12 @@ whose choice will make the biggest minimization in total distance
       diff[i] = new int[3];
     }
 
-    vector<int> dist1(num_cities, INF);
-    vector<int> dist2(num_cities, INF);
+    vector<int> dist1(num_cities, BIGnumber);
+    vector<int> dist2(num_cities, BIGnumber);
 
 
-    g.shortestPath(wh1,dist1);
-    g.shortestPath(wh2,dist2);
+    g.findShortestPaths(wh1,dist1);
+    g.findShortestPaths(wh2,dist2);
 
     //list< pair<int, int> >::iterator i;
 
@@ -280,7 +266,7 @@ whose choice will make the biggest minimization in total distance
       diff[i][1] = destArr[i];
       diff[i][2] = i;
     }
-     quickSort(diff,0,num_dest-1);
+     quickS(diff,0,num_dest-1);
       
 
 
