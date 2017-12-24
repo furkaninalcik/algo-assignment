@@ -44,7 +44,7 @@ Graph::Graph(int V)
 void Graph::addEdge(int u, int v, int w)
 {
     adj[u].push_back(make_pair(v, w));
-    adj[v].push_back(make_pair(u, w));
+    //adj[v].push_back(make_pair(u, w));
 }
  
 // Prints shortest paths from src to all other vertices
@@ -185,17 +185,7 @@ void quickSort(int** (arr), int low, int high)
 // the set of vertices not yet included in shortest path tree
 
 // A utility function to print the constructed distance array
-int printSolution(int dist[], int num_cities)
-{
-   printf("Vertex   Distance from Source\n");
-   for (int i = 0; i < num_cities; i++)
-      printf("%d \t", i);
-   printf("\n");
-   for (int i = 0; i < num_cities; i++)
-      printf("%d \t", dist[i]);
-   printf("\n");
 
-}
   
 // Funtion that implements Dijkstra's single source shortest path algorithm
 // for a graph represented using adjacency matrix representation
@@ -326,7 +316,7 @@ whose choice will make the biggest minimization in total distance
    
     duration2 = ( std::clock() - duration1 ) / (double) CLOCKS_PER_SEC;
 
-    std::cout<<"Time to find the shortest paths: "<< duration2 <<'\n'; 
+    //std::cout<<"Time to find the shortest paths: "<< duration2 <<'\n'; 
     
 
     for (int i = 0; i < num_dest; ++i)
@@ -400,14 +390,7 @@ whose choice will make the biggest minimization in total distance
     quickSort(result,0,num_dest-1);
        for (int i = 0; i < num_dest; ++i)
       {
-        if ((result[i][1]) == wh1)
-        {
-          total += dist1[result[i][0]];
-        }
-        if ((result[i][1]) == wh2)
-        {
-          total += dist2[result[i][0]];
-        }
+
         printf("%d %d \n", (result[i][0]) , (result[i][1])  );
         //myfile << *((result[i])) << " " << *((result[i])+1)  << "\n";
       }
